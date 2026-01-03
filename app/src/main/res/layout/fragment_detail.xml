@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginFragment">
+    tools:context=".DetailFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Login Page" />
+        android:text="Detail Page" />
 
     <Button
-        android:id="@+id/login"
+        android:id="@+id/detail"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:text="git">

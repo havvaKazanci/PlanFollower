@@ -25,8 +25,11 @@ androidx-navigation-compose = {group = "androidx.navigation", name="navigation-c
 androidx-navigation-fragment = { group = "androidx.navigation", name="navigation-fragment",version.ref= "nav_version"}
 androidx-navigation-ui = {group = "androidx.navigation", name="navigation-ui", version.ref="nav_version"}
 androidx-navigation-dynamic-features-fragment = {group ="androidx.navigation",name="navigation-dynamic-features-fragment",version.ref = "nav_version"}
-kotlinx-serialization-json = {group = "org.jetbrains.kotlinx", name="kotlinx-serialization-json", version="serialization"}
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+navigation-safe-args= { id= "androidx.navigation.safeargs.kotlin" , version.ref= "nav_version"}

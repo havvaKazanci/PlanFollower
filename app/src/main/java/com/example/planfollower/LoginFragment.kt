@@ -37,6 +37,10 @@ class LoginFragment : Fragment() {
         binding.login.setOnClickListener {
             login(it)
         }
+
+        binding.goRegister.setOnClickListener {
+            goRegister(it)
+        }
     }
 
     override fun onDestroyView() {
@@ -47,6 +51,11 @@ class LoginFragment : Fragment() {
 
     fun login(view: View){
         val action = LoginFragmentDirections.actionLoginFragmentToNotesFragment()
+        Navigation.findNavController(view).navigate(action)
+    }
+
+    fun goRegister(view: View){
+        val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
         Navigation.findNavController(view).navigate(action)
     }
 

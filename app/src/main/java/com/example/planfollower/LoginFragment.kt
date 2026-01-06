@@ -34,13 +34,24 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.login.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             login(it)
         }
 
-        binding.goRegister.setOnClickListener {
-            goRegister(it)
+        binding.tvRegisterText.setOnClickListener {
+            goRegisterPage(it)
         }
+
+    }
+
+    fun login(view: View){
+        val action = LoginFragmentDirections.actionLoginFragmentToNotesFragment()
+        Navigation.findNavController(view).navigate(action)
+    }
+
+    fun goRegisterPage (view: View){
+        val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+        Navigation.findNavController(view).navigate(action)
     }
 
     override fun onDestroyView() {
@@ -49,15 +60,7 @@ class LoginFragment : Fragment() {
     }
 
 
-    fun login(view: View){
-        val action = LoginFragmentDirections.actionLoginFragmentToNotesFragment()
-        Navigation.findNavController(view).navigate(action)
-    }
 
-    fun goRegister(view: View){
-        val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
-        Navigation.findNavController(view).navigate(action)
-    }
 
 
 }

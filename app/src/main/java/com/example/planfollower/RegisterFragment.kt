@@ -30,13 +30,16 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.back.setOnClickListener {
-            backToLogin(it)
+        binding.btnRegister.setOnClickListener {
+            register(it)
         }
+
+
     }
 
-    fun backToLogin(view: View){
+    fun register(view: View){
+
+        //Code to execute on successful login
         val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
         Navigation.findNavController(view).navigate(action)
     }
@@ -45,6 +48,8 @@ class RegisterFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 
 
 

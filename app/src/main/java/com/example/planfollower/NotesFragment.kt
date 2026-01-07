@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.planfollower.databinding.FragmentDetailBinding
 import com.example.planfollower.databinding.FragmentNotesBinding
 
@@ -17,6 +18,7 @@ class NotesFragment : Fragment() {
 
     }
 
+    private lateinit var noteList : ArrayList<Note>
     private var _binding: FragmentNotesBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -31,16 +33,22 @@ class NotesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.notes.setOnClickListener {
-            notes(it)
-        }
+
+        val note1 = Note("Shopping List","Book, pencil, apple")
+        val note2 = Note("Activity List","Running, yoga, walking")
+
+        noteList=arrayListOf(note1,note2)
+
+        val adapter = NoteAdapter(noteList)
+        binding.rvNote.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvNote.adapter = adapter
     }
 
 
-    fun notes(view: View){
+    /*fun goDetailFragment(view: View){
         val action = NotesFragmentDirections.actionNotesFragmentToDetailFragment()
         Navigation.findNavController(view).navigate(action)
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

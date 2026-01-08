@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.navigation.safe.args)
+    id("kotlin-parcelize")
 
 }
 
@@ -58,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui)
 
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.recyclerview.selection)
 
 
 }

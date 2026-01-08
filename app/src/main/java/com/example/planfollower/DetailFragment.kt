@@ -31,8 +31,15 @@ class DetailFragment : Fragment() {
     }
 
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        val args = DetailFragmentArgs.fromBundle(requireArguments())
+        val note = args.note
 
+        binding.tvTitledetail.text = note.title
+        binding.tvDescdetail.text = note.noteDetail
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

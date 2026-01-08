@@ -42,6 +42,7 @@ class NotesFragment : Fragment() {
         val adapter = NoteAdapter(noteList)
         binding.rvNote.layoutManager = LinearLayoutManager(requireContext())
         binding.rvNote.adapter = adapter
+
     }
 
 
@@ -54,4 +55,6 @@ class NotesFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

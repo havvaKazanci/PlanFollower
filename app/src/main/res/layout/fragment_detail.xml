@@ -10,14 +10,19 @@
     <TextView
         android:id="@+id/tv_titledetail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        android:textSize="36sp"
+        android:textStyle="bold">
 
     </TextView>
 
     <TextView
         android:id="@+id/tv_descdetail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        android:textSize="24sp">
 
     </TextView>
 

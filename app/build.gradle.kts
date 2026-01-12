@@ -67,4 +67,6 @@ dependencies {
 
     implementation(libs.androidx.fragment.ktx)
 
+    implementation(libs.bundles.network)
+
 }

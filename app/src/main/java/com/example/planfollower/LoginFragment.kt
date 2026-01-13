@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.planfollower.api.RetrofitClient
+import com.example.planfollower.api.TokenManager
 import com.example.planfollower.databinding.FragmentLoginBinding
 import kotlinx.coroutines.launch
 
@@ -36,6 +37,14 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val savedToken = TokenManager.getToken(requireContext())
+
+        if (savedToken != null) {
+            //If exist directly go to main notes page
+            val action = LoginFragmentDirections.actionLoginFragmentToNotesFragment()
+            Navigation.findNavController(view).navigate(action)
+        }
 
         binding.btnLogin.setOnClickListener {
             login(it)
@@ -73,11 +82,16 @@ class LoginFragment : Fragment() {
                     val token = loginResponse?.token
 
                     // succesfull
-                    Log.d("PlanFollower", "Succesfully loged in! Token: $token")
-                    Toast.makeText(requireContext(), "Welcome, ${loginResponse?.user?.name}", Toast.LENGTH_LONG).show()
+                    if (token != null) {
+                        //save Token to phone
+                        TokenManager.saveToken(requireContext(), token)
 
-                    val action = LoginFragmentDirections.actionLoginFragmentToNotesFragment()
-                    Navigation.findNavController(requireView()).navigate(action)
+                        Log.d("PlanFollower", "Token succesfully saved!")
+
+                        // navigate when everything ok
+                        val action = LoginFragmentDirections.actionLoginFragmentToNotesFragment()
+                        Navigation.findNavController(requireView()).navigate(action)
+                    }
 
                 } else {
                     // Error: 401, 404 (example)

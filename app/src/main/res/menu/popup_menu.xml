@@ -3,4 +3,10 @@
     <item android:id="@+id/addItem" android:title="Add new note">
 
     </item>
+
+    <item
+        android:id="@+id/logoutItem"
+        android:title="Logout">
+
+    </item>
 </menu>

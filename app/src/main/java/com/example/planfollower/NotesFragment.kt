@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.planfollower.api.TokenManager
 import com.example.planfollower.databinding.FragmentNotesBinding
 
 
@@ -52,15 +54,37 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
         }
 
 
-        popup = PopupMenu(requireContext(),binding.floatingActionButton)
+        binding.floatingActionButton.setOnClickListener { view ->
+            // creating popup menu
+            val popupMenu = PopupMenu(requireContext(), view)
 
-        val inflater = popup.menuInflater
-        inflater.inflate(R.menu.popup_menu,popup.menu)
-        popup.setOnMenuItemClickListener(this)
+            // inflate the menu resource into the popupmenu
+            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
 
-        binding.floatingActionButton.setOnClickListener {
-            floatingButtonClicked(it)
+            //setting click listener
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.addItem -> {
+                        //navigation to related page
+                        val action = NotesFragmentDirections.actionNotesFragmentToAddFragment()
+                        Navigation.findNavController(requireView()).navigate(action)
+                        true
+                    }
+                    R.id.logoutItem -> {
+                        //calling function which triggers to logout
+                        performLogout()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            //display popup menu
+            popupMenu.show()
         }
+
+
+
+
     }
 
 
@@ -70,11 +94,23 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     }*/
 
 
-    fun floatingButtonClicked(view: View){
 
 
-        popup.show()
+
+
+    private fun performLogout() {
+        //Remove the JWT token from SharedPreferences to end the session
+        TokenManager.clearToken(requireContext())
+
+        //navigate back login fragment for another login process
+        // ensure the backstack is cleared ,user cannot return via back button
+        val action = NotesFragmentDirections.actionNotesFragmentToLoginFragment()
+        Navigation.findNavController(requireView()).navigate(action)
+
+        //successful process message
+        Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

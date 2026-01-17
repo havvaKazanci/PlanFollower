@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.planfollower.databinding.FragmentNotesBinding
 import com.example.planfollower.databinding.ReyclerRowBinding
 
-class NoteAdapter(val noteList: ArrayList<Note>): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter(private var noteList: List<NoteDetail>): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
 
     class NoteViewHolder(val binding: ReyclerRowBinding): RecyclerView.ViewHolder(binding.root){
@@ -28,16 +28,24 @@ class NoteAdapter(val noteList: ArrayList<Note>): RecyclerView.Adapter<NoteAdapt
 
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        holder.binding.tvTitle.text= noteList[position].title
-        holder.binding.tvDesc.text= noteList[position].noteDetail
+        val currentNote = noteList[position]
 
+        // mapping backend fields: 'title' and 'noteDetail'
+        holder.binding.tvTitle.text = currentNote.title
+        holder.binding.tvDesc.text = currentNote.content
 
+        // navigation to DetailFragment passing the full NoteDetail object
         holder.itemView.setOnClickListener {
-            val action = NotesFragmentDirections.actionNotesFragmentToDetailFragment(noteList[position])
+            val action = NotesFragmentDirections.actionNotesFragmentToDetailFragment(currentNote)
             Navigation.findNavController(it).navigate(action)
         }
 
 
+    }
+
+    fun updateList(newList: List<NoteDetail>) {
+        this.noteList = newList
+        notifyDataSetChanged() // refresh the UI with new data
     }
 
 }

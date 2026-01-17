@@ -57,6 +57,6 @@
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="note"
-            app:argType="com.example.planfollower.Note" />
+            app:argType="com.example.planfollower.NoteDetail" />
     </fragment>
 </navigation>

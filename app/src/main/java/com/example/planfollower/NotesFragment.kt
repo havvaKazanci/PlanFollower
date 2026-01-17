@@ -23,7 +23,7 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
     }
 
-    private lateinit var noteList : ArrayList<Note>
+    private lateinit var noteList : List<NoteDetail>
     private lateinit var popup : PopupMenu
     private val viewModel: NotesViewModel by activityViewModels()
     private lateinit var adapter : NoteAdapter
@@ -42,15 +42,20 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = NoteAdapter(arrayListOf())
+        adapter = NoteAdapter(emptyList())
         binding.rvNote.adapter = adapter
         binding.rvNote.layoutManager = LinearLayoutManager(requireContext())
 
 
-        viewModel.noteList.observe(viewLifecycleOwner) {
-            adapter.noteList.clear()
-            adapter.noteList.addAll(it)
-            adapter.notifyDataSetChanged()
+        viewModel.noteList.observe(viewLifecycleOwner) { notes ->
+            // used the updateList method created in Adapter for better performance
+            adapter.updateList(notes)
+        }
+
+        // trigger initial data fetch from API
+        val token = TokenManager.getToken(requireContext())
+        if (token != null) {
+            viewModel.fetchNotes(token)
         }
 
 
@@ -82,21 +87,7 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             popupMenu.show()
         }
 
-
-
-
     }
-
-
-    /*fun goDetailFragment(view: View){
-        val action = NotesFragmentDirections.actionNotesFragmentToDetailFragment()
-        Navigation.findNavController(view).navigate(action)
-    }*/
-
-
-
-
-
 
     private fun performLogout() {
         //Remove the JWT token from SharedPreferences to end the session

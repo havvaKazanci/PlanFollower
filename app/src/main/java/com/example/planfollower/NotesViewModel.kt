@@ -1,17 +1,37 @@
 package com.example.planfollower
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.planfollower.api.RetrofitClient
+import kotlinx.coroutines.launch
 
 
 class NotesViewModel: ViewModel() {
 
-    val noteList = MutableLiveData<List<Note>>(emptyList())
+    private val _noteList = MutableLiveData<List<NoteDetail>>()
+    val noteList: LiveData<List<NoteDetail>> get() = _noteList
 
-    fun addNote(note: Note) {
-        val newList = noteList.value.orEmpty().toMutableList()
-        newList.add(note)
-        noteList.value = newList
+    fun fetchNotes(token: String) {
+        val authHeader = "Bearer $token" //bearer for middleware
+
+
+        viewModelScope.launch {
+            try {
+                //backend Retrofit setting
+                val response = RetrofitClient.instance.getUserNotes(authHeader)
+
+                if (response.isSuccessful) {
+                    // setting coming data
+                    _noteList.value = response.body() ?: emptyList()
+                } else {
+                    Log.e("PlanFollower", "Fetch Notes Error: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("PlanFollower", "Connection Error: ${e.message}")
+            }
+        }
     }
 }

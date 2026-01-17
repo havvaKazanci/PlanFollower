@@ -38,7 +38,7 @@ class DetailFragment : Fragment() {
         val note = args.note
 
         binding.tvTitledetail.text = note.title
-        binding.tvDescdetail.text = note.noteDetail
+        binding.tvDescdetail.text = note.content
     }
     override fun onDestroyView() {
         super.onDestroyView()

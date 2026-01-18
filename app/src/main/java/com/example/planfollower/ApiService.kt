@@ -1,11 +1,14 @@
 package com.example.planfollower
 
 
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiService {
     // POST http://10.0.2.2:3000/api/auth/register
@@ -27,4 +30,11 @@ interface ApiService {
     suspend fun getUserNotes(
         @Header("Authorization") token: String
     ): Response<List<NoteDetail>> // returns a list of previously defined NoteDetail model
+
+
+    @DELETE("api/notes/{id}")
+    suspend fun deleteNote(
+        @Header("Authorization") token: String,
+        @Path("id") noteId: String
+    ): Response<ResponseBody> // ResponseBody used for only success message
 }

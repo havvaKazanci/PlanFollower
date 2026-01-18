@@ -11,7 +11,9 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.planfollower.api.TokenManager
 import com.example.planfollower.databinding.FragmentNotesBinding
 
@@ -86,6 +88,33 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             //display popup menu
             popupMenu.show()
         }
+
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            0, // dont want drag
+            ItemTouchHelper.LEFT // only swipe the right
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false // OnMove is not used
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                //taking the position of swiped
+                val position = viewHolder.adapterPosition
+                val noteToDelete = adapter.getNoteAt(position)
+
+                //delete
+                val token = TokenManager.getToken(requireContext())
+                if (token != null) {
+                    viewModel.deleteNote(token, noteToDelete.id)
+                    Toast.makeText(requireContext(), "Note Deleted", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        //connection to recyclerview rvNote
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.rvNote)
 
     }
 

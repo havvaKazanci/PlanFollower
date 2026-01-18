@@ -34,4 +34,18 @@ class NotesViewModel: ViewModel() {
             }
         }
     }
+
+
+    fun deleteNote(token: String, noteId: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.instance.deleteNote("Bearer $token", noteId)
+                if (response.isSuccessful) {
+                    fetchNotes(token)
+                }
+            } catch (e: Exception) {
+                Log.e("PlanFollower", "Delete error: ${e.message}")
+            }
+        }
+    }
 }

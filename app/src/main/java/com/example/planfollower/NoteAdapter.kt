@@ -43,6 +43,10 @@ class NoteAdapter(private var noteList: List<NoteDetail>): RecyclerView.Adapter<
 
     }
 
+    fun getNoteAt(position: Int): NoteDetail {
+        return noteList[position]
+    }
+
     fun updateList(newList: List<NoteDetail>) {
         this.noteList = newList
         notifyDataSetChanged() // refresh the UI with new data

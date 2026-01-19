@@ -8,6 +8,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
@@ -37,4 +38,12 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") noteId: String
     ): Response<ResponseBody> // ResponseBody used for only success message
+
+
+    @PUT("api/notes/{id}")
+    suspend fun updateNote(
+        @Header("Authorization") token: String,
+        @Path("id") noteId: String,
+        @Body request: NoteRequest //data model for notes
+    ): Response<NoteDetail>
 }

@@ -48,4 +48,20 @@ class NotesViewModel: ViewModel() {
             }
         }
     }
+
+
+    fun updateNote(token: String, noteId: String, title: String, content: String) {
+        viewModelScope.launch {
+            try {
+                val request = NoteRequest(title, content)
+                val response = RetrofitClient.instance.updateNote("Bearer $token", noteId, request)
+                if (response.isSuccessful) {
+                    //show new list when updating successful
+                    fetchNotes(token)
+                }
+            } catch (e: Exception) {
+                Log.e("PlanFollower", "Update error: ${e.message}")
+            }
+        }
+    }
 }

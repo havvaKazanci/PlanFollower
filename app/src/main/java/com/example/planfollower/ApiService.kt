@@ -10,6 +10,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     // POST http://10.0.2.2:3000/api/auth/register
@@ -29,7 +30,8 @@ interface ApiService {
 
     @GET("api/notes")
     suspend fun getUserNotes(
-        @Header("Authorization") token: String
+        @Header("Authorization") token: String,
+        @Query("search") query: String? = null
     ): Response<List<NoteDetail>> // returns a list of previously defined NoteDetail model
 
 

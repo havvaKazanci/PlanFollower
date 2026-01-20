@@ -14,14 +14,14 @@ class NotesViewModel: ViewModel() {
     private val _noteList = MutableLiveData<List<NoteDetail>>()
     val noteList: LiveData<List<NoteDetail>> get() = _noteList
 
-    fun fetchNotes(token: String) {
+    fun fetchNotes(token: String,search: String? = null) {
         val authHeader = "Bearer $token" //bearer for middleware
 
 
         viewModelScope.launch {
             try {
                 //backend Retrofit setting
-                val response = RetrofitClient.instance.getUserNotes(authHeader)
+                val response = RetrofitClient.instance.getUserNotes(authHeader,search)
 
                 if (response.isSuccessful) {
                     // setting coming data

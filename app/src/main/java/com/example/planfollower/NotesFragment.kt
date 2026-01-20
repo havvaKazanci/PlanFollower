@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.planfollower.api.TokenManager
 import com.example.planfollower.databinding.FragmentNotesBinding
+import android.widget.SearchView
 
 
 class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
@@ -44,6 +45,14 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
+        // trigger initial data fetch from API
+        val token = TokenManager.getToken(requireContext())
+        if (token != null) {
+            viewModel.fetchNotes(token)
+        }
+
         adapter = NoteAdapter(emptyList())
         binding.rvNote.adapter = adapter
         binding.rvNote.layoutManager = LinearLayoutManager(requireContext())
@@ -53,13 +62,6 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             // used the updateList method created in Adapter for better performance
             adapter.updateList(notes)
         }
-
-        // trigger initial data fetch from API
-        val token = TokenManager.getToken(requireContext())
-        if (token != null) {
-            viewModel.fetchNotes(token)
-        }
-
 
         binding.floatingActionButton.setOnClickListener { view ->
             // creating popup menu
@@ -115,6 +117,23 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
         //connection to recyclerview rvNote
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.rvNote)
+
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                //trigger when search
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                //when you press any key it will send the request to backend
+                val token = TokenManager.getToken(requireContext())
+                if (token != null) {
+                    viewModel.fetchNotes(token, newText) //sending request when you press any key
+                }
+                return true
+            }
+        })
 
     }
 

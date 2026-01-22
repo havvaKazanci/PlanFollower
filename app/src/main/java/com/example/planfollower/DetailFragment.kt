@@ -1,13 +1,17 @@
 package com.example.planfollower
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.planfollower.api.TokenManager
 import com.example.planfollower.databinding.FragmentAddBinding
 import com.example.planfollower.databinding.FragmentDetailBinding
@@ -24,7 +28,8 @@ class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: NotesViewModel by activityViewModels()
+    private val args: DetailFragmentArgs by navArgs()
+    private val viewModel: NotesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +60,34 @@ class DetailFragment : Fragment() {
             } else {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
+        }
+
+
+        binding.btnShare.setOnClickListener {
+            val input = EditText(requireContext())
+            input.hint = "E mail"
+
+            AlertDialog.Builder(requireContext())
+                .setTitle("Share Note")
+                .setMessage("Please write the email you want to share:")
+                .setView(input)
+                .setPositiveButton("Share") { _, _ ->
+                    val email = input.text.toString()
+                    if (email.isNotEmpty()) {
+                        val token = TokenManager.getToken(requireContext())
+                        if (token != null) {
+                            // ViewModel çağrısı
+                            viewModel.shareNote(token, args.note.id, email)
+                        }
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        //see the result
+        viewModel.shareResult.observe(viewLifecycleOwner) { message ->
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -14,6 +14,9 @@ class NotesViewModel: ViewModel() {
     private val _noteList = MutableLiveData<List<NoteDetail>>()
     val noteList: LiveData<List<NoteDetail>> get() = _noteList
 
+    private val _shareResult = MutableLiveData<String>()
+    val shareResult: LiveData<String> = _shareResult
+
     fun fetchNotes(token: String,search: String? = null) {
         val authHeader = "Bearer $token" //bearer for middleware
 
@@ -61,6 +64,23 @@ class NotesViewModel: ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("PlanFollower", "Update error: ${e.message}")
+            }
+        }
+    }
+
+
+    fun shareNote(token: String, noteId: String, email: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.instance.shareNote("Bearer $token", noteId, ShareRequest(email))
+                when (response.code()) {
+                    200 -> _shareResult.value = "Note successfully shared."
+                    404 -> _shareResult.value = "Error: User cannot find."
+                    403 -> _shareResult.value = "You are not able to share this note."
+                    else -> _shareResult.value = "Error occured: ${response.code()}"
+                }
+            } catch (e: Exception) {
+                _shareResult.value = "Connection Error: ${e.message}"
             }
         }
     }

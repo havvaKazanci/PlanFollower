@@ -48,4 +48,12 @@ interface ApiService {
         @Path("id") noteId: String,
         @Body request: NoteRequest //data model for notes
     ): Response<NoteDetail>
+
+
+    @POST("api/notes/{id}/share")
+    suspend fun shareNote(
+        @Header("Authorization") token: String,
+        @Path("id") noteId: String,
+        @Body request: ShareRequest
+    ): Response<Unit>
 }

@@ -69,4 +69,6 @@ dependencies {
 
     implementation(libs.bundles.network)
 
+    implementation(libs.socket.io.client)
+
 }

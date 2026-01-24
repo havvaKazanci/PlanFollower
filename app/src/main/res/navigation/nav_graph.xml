@@ -58,5 +58,10 @@
         <argument
             android:name="note"
             app:argType="com.example.planfollower.NoteDetail" />
+
+        <argument
+            android:name="noteId"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
 </navigation>

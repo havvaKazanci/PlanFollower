@@ -47,10 +47,23 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
 
 
+
         // trigger initial data fetch from API
         val token = TokenManager.getToken(requireContext())
         if (token != null) {
             viewModel.fetchNotes(token)
+
+            SocketHandler.setSocket()
+            SocketHandler.establishConnection()
+            val mSocket = SocketHandler.getSocket()
+
+
+            val userId = getUserIdFromToken(token)
+            if (userId != null) {
+                mSocket.emit("register", userId)
+            }
+
+            setupSocketListeners()
         }
 
         adapter = NoteAdapter(emptyList())
@@ -150,9 +163,45 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
         Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 
+    private fun getUserIdFromToken(token: String): String? {
+        return try {
+
+            val parts = token.split(".")
+            if (parts.size < 2) return null
+
+            val payload = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
+            val jsonObject = org.json.JSONObject(payload)
+
+
+            jsonObject.getString("userId")
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun setupSocketListeners() {
+        val mSocket = SocketHandler.getSocket()
+
+        mSocket.on("new_notification") { args ->
+            if (args[0] != null) {
+                val data = args[0] as org.json.JSONObject
+                val title = data.getString("title")
+                val message = data.getString("message")
+                val noteId = data.getString("noteId")
+
+                activity?.runOnUiThread {
+                    // toast message for notification for now only
+                    Toast.makeText(requireContext(), "$title: $message", Toast.LENGTH_LONG).show()
+
+
+                }
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        SocketHandler.getSocket().off("new_notification")
         _binding = null
     }
 

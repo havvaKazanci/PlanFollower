@@ -1,22 +1,22 @@
-package com.example.planfollower
+package com.example.planfollower.ui.adapters
 
-import android.app.Notification
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import com.example.planfollower.databinding.FragmentNotesBinding
-import com.example.planfollower.databinding.ReyclerRowBinding
+import com.example.planfollower.databinding.RecyclerRowBinding
+import com.example.planfollower.models.NoteDetail
+import com.example.planfollower.ui.fragments.NotesFragmentDirections
 
 class NoteAdapter(private var noteList: List<NoteDetail>): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
 
-    class NoteViewHolder(val binding: ReyclerRowBinding): RecyclerView.ViewHolder(binding.root){
+    class NoteViewHolder(val binding: RecyclerRowBinding): RecyclerView.ViewHolder(binding.root){
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        val binding = ReyclerRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = RecyclerRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return NoteViewHolder(binding)
     }
 
@@ -36,7 +36,7 @@ class NoteAdapter(private var noteList: List<NoteDetail>): RecyclerView.Adapter<
 
         // navigation to DetailFragment passing the full NoteDetail object
         holder.itemView.setOnClickListener {
-            val action = NotesFragmentDirections.actionNotesFragmentToDetailFragment(currentNote)
+            val action = NotesFragmentDirections.Companion.actionNotesFragmentToDetailFragment(currentNote)
             Navigation.findNavController(it).navigate(action)
         }
 

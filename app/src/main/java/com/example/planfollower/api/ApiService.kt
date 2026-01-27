@@ -1,6 +1,13 @@
-package com.example.planfollower
+package com.example.planfollower.api
 
-
+import com.example.planfollower.models.LoginRequest
+import com.example.planfollower.models.LoginResponse
+import com.example.planfollower.models.NoteDetail
+import com.example.planfollower.models.NoteRequest
+import com.example.planfollower.models.NoteResponse
+import com.example.planfollower.models.RegisterRequest
+import com.example.planfollower.models.RegisterResponse
+import com.example.planfollower.models.ShareRequest
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body

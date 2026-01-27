@@ -1,17 +1,18 @@
-package com.example.planfollower
+package com.example.planfollower.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import com.example.planfollower.ui.fragments.RegisterFragmentDirections
 import com.example.planfollower.api.RetrofitClient
-import com.example.planfollower.databinding.FragmentDetailBinding
 import com.example.planfollower.databinding.FragmentRegisterBinding
+import com.example.planfollower.models.RegisterRequest
 import kotlinx.coroutines.launch
 
 class RegisterFragment : Fragment() {
@@ -77,7 +78,7 @@ class RegisterFragment : Fragment() {
                     Toast.makeText(requireContext(), "Registration process is successful, you can login now.", Toast.LENGTH_LONG).show()
 
                     //Go to login page when process ok. (Registration ok)
-                    val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+                    val action = RegisterFragmentDirections.Companion.actionRegisterFragmentToLoginFragment()
                     Navigation.findNavController(requireView()).navigate(action)
                 } else {
                     //Backend errors such as this email is already in the system

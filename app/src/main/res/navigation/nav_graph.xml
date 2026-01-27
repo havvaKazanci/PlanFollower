@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.planfollower.LoginFragment"
+        android:name="com.example.planfollower.ui.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.planfollower.RegisterFragment"
+        android:name="com.example.planfollower.ui.fragments.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/notesFragment"
-        android:name="com.example.planfollower.NotesFragment"
+        android:name="com.example.planfollower.ui.fragments.NotesFragment"
         android:label="fragment_notes"
         tools:layout="@layout/fragment_notes" >
         <action
@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/addFragment"
-        android:name="com.example.planfollower.AddFragment"
+        android:name="com.example.planfollower.ui.fragments.AddFragment"
         android:label="fragment_add"
         tools:layout="@layout/fragment_add" >
         <action
@@ -52,12 +52,12 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.planfollower.DetailFragment"
+        android:name="com.example.planfollower.ui.fragments.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="note"
-            app:argType="com.example.planfollower.NoteDetail" />
+            app:argType="com.example.planfollower.models.NoteDetail" />
 
         <argument
             android:name="noteId"

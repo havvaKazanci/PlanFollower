@@ -1,19 +1,20 @@
-package com.example.planfollower
+package com.example.planfollower.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import com.example.planfollower.ui.fragments.LoginFragmentDirections
 import com.example.planfollower.api.RetrofitClient
 import com.example.planfollower.api.TokenManager
 import com.example.planfollower.databinding.FragmentLoginBinding
+import com.example.planfollower.models.LoginRequest
 import kotlinx.coroutines.launch
-
 
 class LoginFragment : Fragment() {
 
@@ -42,7 +43,7 @@ class LoginFragment : Fragment() {
 
         if (savedToken != null) {
             //If exist directly go to main notes page
-            val action = LoginFragmentDirections.actionLoginFragmentToNotesFragment()
+            val action = LoginFragmentDirections.Companion.actionLoginFragmentToNotesFragment()
             Navigation.findNavController(view).navigate(action)
         }
 
@@ -89,7 +90,7 @@ class LoginFragment : Fragment() {
                         Log.d("PlanFollower", "Token succesfully saved!")
 
                         // navigate when everything ok
-                        val action = LoginFragmentDirections.actionLoginFragmentToNotesFragment()
+                        val action = LoginFragmentDirections.Companion.actionLoginFragmentToNotesFragment()
                         Navigation.findNavController(requireView()).navigate(action)
                     }
 
@@ -108,7 +109,7 @@ class LoginFragment : Fragment() {
     }
 
     fun goRegisterPage (view: View){
-        val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+        val action = LoginFragmentDirections.Companion.actionLoginFragmentToRegisterFragment()
         Navigation.findNavController(view).navigate(action)
     }
 

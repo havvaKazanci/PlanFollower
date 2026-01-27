@@ -1,4 +1,4 @@
-package com.example.planfollower
+package com.example.planfollower.models
 
 data class UserData(
     val id: String,

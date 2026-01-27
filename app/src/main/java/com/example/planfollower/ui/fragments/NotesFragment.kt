@@ -1,11 +1,12 @@
-package com.example.planfollower
+package com.example.planfollower.ui.fragments
 
-import android.R.id.list
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
@@ -14,10 +15,15 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planfollower.ui.adapters.NoteAdapter
+import com.example.planfollower.ui.fragments.NotesFragmentDirections
+import com.example.planfollower.viewmodels.NotesViewModel
+import com.example.planfollower.R
 import com.example.planfollower.api.TokenManager
 import com.example.planfollower.databinding.FragmentNotesBinding
-import android.widget.SearchView
-
+import com.example.planfollower.models.NoteDetail
+import com.example.planfollower.utils.SocketHandler
+import org.json.JSONObject
 
 class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
@@ -88,7 +94,7 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 when (item.itemId) {
                     R.id.addItem -> {
                         //navigation to related page
-                        val action = NotesFragmentDirections.actionNotesFragmentToAddFragment()
+                        val action = NotesFragmentDirections.Companion.actionNotesFragmentToAddFragment()
                         Navigation.findNavController(requireView()).navigate(action)
                         true
                     }
@@ -156,7 +162,7 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
         //navigate back login fragment for another login process
         // ensure the backstack is cleared ,user cannot return via back button
-        val action = NotesFragmentDirections.actionNotesFragmentToLoginFragment()
+        val action = NotesFragmentDirections.Companion.actionNotesFragmentToLoginFragment()
         Navigation.findNavController(requireView()).navigate(action)
 
         //successful process message
@@ -169,8 +175,8 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             val parts = token.split(".")
             if (parts.size < 2) return null
 
-            val payload = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
-            val jsonObject = org.json.JSONObject(payload)
+            val payload = String(Base64.decode(parts[1], Base64.DEFAULT))
+            val jsonObject = JSONObject(payload)
 
 
             jsonObject.getString("userId")
@@ -184,7 +190,7 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
         mSocket.on("new_notification") { args ->
             if (args[0] != null) {
-                val data = args[0] as org.json.JSONObject
+                val data = args[0] as JSONObject
                 val title = data.getString("title")
                 val message = data.getString("message")
                 val noteId = data.getString("noteId")
@@ -207,7 +213,7 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         if(item?.itemId == R.id.addItem){
-            val action = NotesFragmentDirections.actionNotesFragmentToAddFragment()
+            val action = NotesFragmentDirections.Companion.actionNotesFragmentToAddFragment()
             Navigation.findNavController(requireView()).navigate(action)
         }
         return true

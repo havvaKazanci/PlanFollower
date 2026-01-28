@@ -18,13 +18,19 @@ object RetrofitClient {
         .addInterceptor(logging)
         .build()
 
-    val instance: ApiService by lazy {
-        val retrofit = Retrofit.Builder()
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
+    }
 
+    val instance: ApiService by lazy {
         retrofit.create(ApiService::class.java)
+    }
+
+    fun <T> createService(serviceClass: Class<T>): T {
+        return retrofit.create(serviceClass)
     }
 }

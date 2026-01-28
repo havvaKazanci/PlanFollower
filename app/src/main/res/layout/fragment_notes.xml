@@ -18,6 +18,38 @@
         app:layout_constraintTop_toTopOf="parent"
         app:iconifiedByDefault="false"/>
 
+    <FrameLayout
+        android:id="@+id/notificationContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/searchView">
+
+        <ImageView
+            android:id="@+id/btnNotifications"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:contentDescription="Notification Icon"
+            android:src="@android:drawable/ic_dialog_info" /> <TextView
+            android:id="@+id/txtNotificationBadge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/ic_launcher_background"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+        tools:text="3"
+        tools:visibility="visible" />
+    </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_note"
         android:layout_width="0dp"

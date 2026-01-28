@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,10 +20,15 @@ import com.example.planfollower.ui.adapters.NoteAdapter
 import com.example.planfollower.ui.fragments.NotesFragmentDirections
 import com.example.planfollower.viewmodels.NotesViewModel
 import com.example.planfollower.R
+import com.example.planfollower.api.NotificationService
+import com.example.planfollower.api.RetrofitClient
 import com.example.planfollower.api.TokenManager
 import com.example.planfollower.databinding.FragmentNotesBinding
 import com.example.planfollower.models.NoteDetail
+import com.example.planfollower.repository.NotificationRepository
 import com.example.planfollower.utils.SocketHandler
+import com.example.planfollower.utils.ViewModelFactory
+import com.example.planfollower.viewmodels.NotificationViewModel
 import org.json.JSONObject
 
 class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
@@ -35,6 +41,7 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     private lateinit var noteList : List<NoteDetail>
     private lateinit var popup : PopupMenu
     private val viewModel: NotesViewModel by activityViewModels()
+    private lateinit var notificationViewModel: NotificationViewModel
     private lateinit var adapter : NoteAdapter
     private var _binding: FragmentNotesBinding? = null
     private val binding get() = _binding!!
@@ -52,35 +59,51 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
         super.onViewCreated(view, savedInstanceState)
 
 
+        //ui adapter
+        adapter = NoteAdapter(emptyList())
+        binding.rvNote.adapter = adapter
+        binding.rvNote.layoutManager = LinearLayoutManager(requireContext())
 
+        //viewmodel observer
+        viewModel.noteList.observe(viewLifecycleOwner) { notes ->
+            // used the updateList method created in Adapter for better performance
+            adapter.updateList(notes)
+        }
+
+
+        val service = RetrofitClient.createService(NotificationService::class.java)
+        val repository = NotificationRepository(service)
+        val factory = ViewModelFactory(repository)
+
+        notificationViewModel = ViewModelProvider(this, factory)[NotificationViewModel::class.java]
+
+        notificationViewModel.unreadCount.observe(viewLifecycleOwner) { count ->
+            updateNotificationBadge(count)
+        }
 
         // trigger initial data fetch from API
         val token = TokenManager.getToken(requireContext())
-        if (token != null) {
+        token?.let{ safeToken->
             viewModel.fetchNotes(token)
+            notificationViewModel.fetchNotifications(safeToken)
+
 
             SocketHandler.setSocket()
             SocketHandler.establishConnection()
             val mSocket = SocketHandler.getSocket()
 
 
-            val userId = getUserIdFromToken(token)
-            if (userId != null) {
-                mSocket.emit("register", userId)
+            val userId = getUserIdFromToken(safeToken)
+            userId?.let {id->
+                mSocket.emit("register",id)
             }
 
             setupSocketListeners()
+
         }
 
-        adapter = NoteAdapter(emptyList())
-        binding.rvNote.adapter = adapter
-        binding.rvNote.layoutManager = LinearLayoutManager(requireContext())
 
 
-        viewModel.noteList.observe(viewLifecycleOwner) { notes ->
-            // used the updateList method created in Adapter for better performance
-            adapter.updateList(notes)
-        }
 
         binding.floatingActionButton.setOnClickListener { view ->
             // creating popup menu
@@ -188,6 +211,8 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     private fun setupSocketListeners() {
         val mSocket = SocketHandler.getSocket()
 
+        val token = TokenManager.getToken(requireContext())
+
         mSocket.on("new_notification") { args ->
             if (args[0] != null) {
                 val data = args[0] as JSONObject
@@ -195,13 +220,28 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 val message = data.getString("message")
                 val noteId = data.getString("noteId")
 
-                activity?.runOnUiThread {
-                    // toast message for notification for now only
-                    Toast.makeText(requireContext(), "$title: $message", Toast.LENGTH_LONG).show()
+                token?.let { safeToken->
+                    activity?.runOnUiThread {
+                        // toast message for notification for now only
+                        Toast.makeText(requireContext(), "$title: $message", Toast.LENGTH_LONG).show()
 
+                        viewModel.fetchNotes(token)
+                        notificationViewModel.fetchNotifications(token)
 
+                    }
                 }
+
             }
+        }
+    }
+
+
+    private fun updateNotificationBadge(count: Int) {
+        if (count > 0) {
+            binding.txtNotificationBadge.text = if (count > 9) "9+" else count.toString()
+            binding.txtNotificationBadge.visibility = View.VISIBLE
+        } else {
+            binding.txtNotificationBadge.visibility = View.GONE
         }
     }
 

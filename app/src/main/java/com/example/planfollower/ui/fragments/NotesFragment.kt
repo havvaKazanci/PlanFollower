@@ -41,14 +41,18 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     private lateinit var noteList : List<NoteDetail>
     private lateinit var popup : PopupMenu
     private val viewModel: NotesViewModel by activityViewModels()
-    private lateinit var notificationViewModel: NotificationViewModel
+    private val notificationViewModel: NotificationViewModel by activityViewModels {
+        val service = RetrofitClient.createService(NotificationService::class.java)
+        val repository = NotificationRepository(service)
+        ViewModelFactory(repository)
+    }
     private lateinit var adapter : NoteAdapter
     private var _binding: FragmentNotesBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -75,7 +79,7 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
         val repository = NotificationRepository(service)
         val factory = ViewModelFactory(repository)
 
-        notificationViewModel = ViewModelProvider(this, factory)[NotificationViewModel::class.java]
+
 
         notificationViewModel.unreadCount.observe(viewLifecycleOwner) { count ->
             updateNotificationBadge(count)
@@ -176,6 +180,12 @@ class NotesFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 return true
             }
         })
+
+        binding.notificationContainer.setOnClickListener {
+
+            val action = NotesFragmentDirections.actionNotesFragmentToNotificationFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
 
     }
 

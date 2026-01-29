@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_notesFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_notesFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/addFragment"
@@ -64,4 +67,9 @@
             app:argType="string"
             android:defaultValue="" />
     </fragment>
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.example.planfollower.ui.fragments.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
 </navigation>

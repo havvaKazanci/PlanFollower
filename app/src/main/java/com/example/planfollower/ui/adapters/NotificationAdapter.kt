@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.planfollower.databinding.ItemNotificationBinding
 import com.example.planfollower.models.NotificationResponse
 
-class NotificationAdapter(private var notifications: List<NotificationResponse>) :
+class NotificationAdapter(private var notifications: List<NotificationResponse>,
+                          private val onItemClick: (NotificationResponse) -> Unit) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemNotificationBinding) : RecyclerView.ViewHolder(binding.root)
@@ -20,6 +21,10 @@ class NotificationAdapter(private var notifications: List<NotificationResponse>)
         val item = notifications[position]
         holder.binding.txtNotificationMessage.text = item.message
         holder.binding.txtNotificationDate.text = item.createdAt
+
+        holder.itemView.setOnClickListener {
+            onItemClick(item)
+        }
     }
 
     override fun getItemCount() = notifications.size

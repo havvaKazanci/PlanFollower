@@ -71,5 +71,9 @@
         android:id="@+id/notificationFragment"
         android:name="com.example.planfollower.ui.fragments.NotificationFragment"
         android:label="fragment_notification"
-        tools:layout="@layout/fragment_notification" />
+        tools:layout="@layout/fragment_notification" >
+        <action
+            android:id="@+id/action_notificationFragment_to_notesFragment2"
+            app:destination="@id/notesFragment" />
+    </fragment>
 </navigation>

@@ -49,13 +49,23 @@ class NotificationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = NotificationAdapter(emptyList())
+
+        adapter = NotificationAdapter(emptyList()) { _ ->
+            val action = NotificationFragmentDirections.actionNotificationFragmentToNotesFragment2()
+            androidx.navigation.Navigation.findNavController(requireView()).navigate(action)
+        }
+
         binding.rvNotifications.adapter = adapter
         binding.rvNotifications.layoutManager = LinearLayoutManager(requireContext())
 
 
-        viewModel.unreadNotifications.observe(viewLifecycleOwner) { list ->
+        val token = com.example.planfollower.api.TokenManager.getToken(requireContext())
+        if (token != null) {
+            viewModel.fetchNotifications(token) // Bu satır veriyi getirecek
+        }
 
+
+        viewModel.unreadNotifications.observe(viewLifecycleOwner) { list ->
             adapter.updateList(list)
         }
     }
